@@ -1,1 +1,1 @@
-Free automated photo archival pipeline : iPhone to Google Pixel XL unlimited Google Photos storage
+Free automated photo archival pipeline : iPhone to Google Pixel XL unlimited Google Photos storage. More updates coming soon. 
