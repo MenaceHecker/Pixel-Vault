@@ -1,22 +1,51 @@
-# Dependencies
-node_modules/
-api/node_modules/
+# ── Node / Next.js ────────────────────────────────────────────────────────────
+**/node_modules/
+**/.next/
+**/out/
+**/.vercel/
+**/dist/
+**/build/
+!android/app/build.gradle   # keep gradle build files
 
-# Next.js build output
-api/.next/
-api/out/
-
-# Environment variables
+# Env
+**/.env.local
+**/.env.*.local
 .env
-.env.local
-.env.*.local
 
-# macOS
+# ── Android ───────────────────────────────────────────────────────────────────
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/captures/
+android/.idea/workspace.xml
+android/.idea/navEditor.xml
+android/.idea/assetWizardSettings.xml
+android/.idea/.gitignore
+
+# Signing keystores — NEVER commit
+android/**/*.jks
+android/**/*.keystore
+
+# ── iOS / Shortcuts ───────────────────────────────────────────────────────────
+shortcuts/.DS_Store
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 
-# Logs
+# ── Editor ────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
 *.log
-npm-debug.log*
-
-# TypeScript
-*.tsbuildinfo
+*.pem
+Thumbs.db
