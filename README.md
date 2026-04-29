@@ -18,7 +18,6 @@ instead of switching ecosystems, I built a small pipeline where:
 -   My **iPhone stays my main camera**
 -   The **Pixel XL quietly handles archival storage**
 
-It's not fancy---it just works.
 
 ------------------------------------------------------------------------
 
