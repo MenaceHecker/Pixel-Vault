@@ -8,6 +8,7 @@ import com.pixelvault.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    //Main Activity wiring completed
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: SyncViewModel by viewModels()
