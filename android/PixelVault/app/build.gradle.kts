@@ -16,6 +16,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL",
+            "\"${project.findProperty("VAULT_BASE_URL") ?: "https://pixel-vault-api.vercel.app"}\"")
+        buildConfigField("String", "VAULT_SECRET_KEY",
+            "\"${project.findProperty("VAULT_SECRET_KEY") ?: ""}\"")
     }
 
     buildTypes {
