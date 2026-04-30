@@ -1,92 +1,89 @@
 package com.pixelvault.app
 
 import android.os.Bundle
-import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.pixelvault.app.data.ApiClient
-import com.pixelvault.app.data.model.ConfirmRequest
 import com.pixelvault.app.databinding.ActivityMainBinding
-import com.pixelvault.app.sync.DownloadManager
-import com.pixelvault.app.sync.MediaStoreHelper
-import com.pixelvault.app.util.PrefsManager
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: SyncViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        updateStats()
-
         binding.btnSync.setOnClickListener {
-            startSync()
+            viewModel.startSync()
         }
-    }
 
-    private fun updateStats() {
-        binding.tvLastSync.text = "Last sync: ${PrefsManager.getLastSync(this)}"
-        binding.tvTotalSynced.text = "Total archived: ${PrefsManager.getTotalSynced(this)}"
-    }
-
-    private fun startSync() {
         lifecycleScope.launch {
-            try {
-                setLoading(true)
-                binding.tvStatus.text = "Fetching pending files..."
+            viewModel.syncState.collect { state ->
+                updateUi(state)
+            }
+        }
 
-                val response = withContext(Dispatchers.IO) {
-                    ApiClient.api.getPending()
-                }
+        lifecycleScope.launch {
+            viewModel.lastSync.collect { lastSync ->
+                binding.tvLastSync.text = "Last sync: $lastSync"
+            }
+        }
 
-                if (response.files.isEmpty()) {
-                    binding.tvStatus.text = "No new files to sync"
-                    setLoading(false)
-                    return@launch
-                }
-
-                var count = 0
-                response.files.forEachIndexed { index, file ->
-                    binding.tvStatus.text = "Syncing ${index + 1}/${response.files.size}: ${file.filename}"
-                    
-                    val downloadedFile = withContext(Dispatchers.IO) {
-                        DownloadManager.download(file.url, file.filename)
-                    }
-
-                    if (downloadedFile != null) {
-                        MediaStoreHelper.scanFile(this@MainActivity, downloadedFile)
-                        
-                        withContext(Dispatchers.IO) {
-                            ApiClient.api.confirm(ConfirmRequest(file.id))
-                        }
-                        
-                        count++
-                        PrefsManager.incrementTotalSynced(this@MainActivity, 1)
-                        updateStats()
-                    }
-                }
-
-                PrefsManager.saveLastSync(this@MainActivity)
-                updateStats()
-                binding.tvStatus.text = "Sync complete: $count files added"
-
-            } catch (e: Exception) {
-                binding.tvStatus.text = "Error: ${e.message}"
-                e.printStackTrace()
-            } finally {
-                setLoading(false)
+        lifecycleScope.launch {
+            viewModel.totalSynced.collect { total ->
+                binding.tvTotalSynced.text = "Total archived: $total"
             }
         }
     }
 
-    private fun setLoading(loading: Boolean) {
-        binding.btnSync.isEnabled = !loading
-        binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
+    private fun updateUi(state: SyncState) {
+        when (state) {
+            is SyncState.Idle -> {
+                binding.tvStatus.text = "Ready to sync"
+                binding.tvStatus.setTextColor(getColor(R.color.text_primary))
+                binding.progressBar.visibility = android.view.View.GONE
+                binding.btnSync.isEnabled = true
+            }
+            is SyncState.CheckingWifi -> {
+                binding.tvStatus.text = "Checking Wi-Fi…"
+                binding.tvStatus.setTextColor(getColor(R.color.text_primary))
+                binding.progressBar.visibility = android.view.View.VISIBLE
+                binding.btnSync.isEnabled = false
+            }
+            is SyncState.Checking -> {
+                binding.tvStatus.text = "Checking for pending files…"
+                binding.tvStatus.setTextColor(getColor(R.color.text_primary))
+                binding.progressBar.visibility = android.view.View.VISIBLE
+                binding.btnSync.isEnabled = false
+            }
+            is SyncState.UpToDate -> {
+                binding.tvStatus.text = "Already up to date"
+                binding.tvStatus.setTextColor(getColor(R.color.accent_ok))
+                binding.progressBar.visibility = android.view.View.GONE
+                binding.btnSync.isEnabled = true
+            }
+            is SyncState.Syncing -> {
+                binding.tvStatus.text = "Syncing file ${state.current} of ${state.total}…"
+                binding.tvStatus.setTextColor(getColor(R.color.accent_cyan))
+                binding.progressBar.visibility = android.view.View.VISIBLE
+                binding.btnSync.isEnabled = false
+            }
+            is SyncState.Done -> {
+                binding.tvStatus.text = "${state.count} file(s) synced"
+                binding.tvStatus.setTextColor(getColor(R.color.accent_ok))
+                binding.progressBar.visibility = android.view.View.GONE
+                binding.btnSync.isEnabled = true
+            }
+            is SyncState.Error -> {
+                binding.tvStatus.text = state.message
+                binding.tvStatus.setTextColor(getColor(R.color.accent_warn))
+                binding.progressBar.visibility = android.view.View.GONE
+                binding.btnSync.isEnabled = true
+            }
+        }
     }
 }
