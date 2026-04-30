@@ -34,18 +34,15 @@ iPhone → Vercel API → Pixel XL → Google Photos
 
 ## Components
 
-  ----------------------------------------------------------------------------
-  Component   Stack                     Responsibility                  Cost
-  ----------- ------------------------- ------------------------------- ------
-  api         Next.js + Vercel Blob +   Temporary storage + sync        Free
+  1. api         Next.js + Vercel Blob +   Temporary storage + sync        Free
               KV                        tracking                        
 
-  android     Kotlin + Retrofit +       Uploads to Google Photos        Free
+  2. android     Kotlin + Retrofit +       Uploads to Google Photos        Free
               Coroutines                                                
 
-  shortcuts   iOS Shortcuts             Weekly automation               Free
+  3. shortcuts   iOS Shortcuts             Weekly automation               Free
 
-  Archive     Google Photos (Pixel XL)  Long-term storage               Free
+  4. Archive     Google Photos (Pixel XL)  Long-term storage               Free
   ----------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
