@@ -51,22 +51,22 @@ iPhone → Vercel API → Pixel XL → Google Photos
 
 ### Hardware
 
--   iPhone\
--   Google Pixel XL\
--   USB-C cable\
+-   iPhone
+-   Google Pixel XL
+-   USB-C cable
 -   Wi-Fi
 
 ### Accounts
 
--   Google account\
--   Vercel account\
+-   Google account
+-   Vercel account
 -   GitHub
 
 ### Dev Tools
 
--   Node.js 18+\
--   Android Studio\
--   Vercel CLI\
+-   Node.js 18+
+-   Android Studio
+-   Vercel CLI
 -   ADB
 
 ------------------------------------------------------------------------
@@ -75,8 +75,8 @@ iPhone → Vercel API → Pixel XL → Google Photos
 
 ### 0. Confirm Pixel Storage Perk
 
--   Set Google Photos backup to Original Quality\
--   Upload test photo\
+-   Set Google Photos backup to Original Quality
+-   Upload test photo
 -   Verify storage does not change
 
 ------------------------------------------------------------------------
@@ -90,15 +90,15 @@ cd pixel-vault
 
 ### 2. Deploy API
 
-cd api\
-npm install\
+cd api
+npm install
 vercel deploy
 
 ------------------------------------------------------------------------
 
 ### 3. iOS Shortcut
 
-Create: PixelVault/last_run.txt\
+Create: PixelVault/last_run.txt
 Add today's date
 
 ------------------------------------------------------------------------
@@ -111,7 +111,7 @@ Run via Android Studio
 
 ## Weekly Routine
 
--   Sunday: auto upload\
+-   Sunday: auto upload
 -   Sync Pixel\
 -   Verify photos
 
@@ -119,16 +119,16 @@ Run via Android Studio
 
 ## Environment Variables
 
--   BLOB_READ_WRITE_TOKEN\
--   KV_URL\
+-   BLOB_READ_WRITE_TOKEN
+-   KV_URL
 -   VAULT_SECRET_KEY
 
 ------------------------------------------------------------------------
 
 ## Risks
 
--   Pixel failure\
--   Storage perk removal\
+-   Pixel failure
+-   Storage perk removal
 -   Sync failures
 
 ------------------------------------------------------------------------
