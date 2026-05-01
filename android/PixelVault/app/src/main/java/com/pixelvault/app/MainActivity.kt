@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnSync.setOnClickListener {
-            viewModel.startSync()
+            checkPermissionsAndSync()
         }
 
         lifecycleScope.launch {

@@ -121,4 +121,8 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
     fun resetToIdle() {
         _syncState.value = SyncState.Idle
     }
+
+    fun setError(message: String) {
+        _syncState.value = SyncState.Error(message)
+    }
 }
