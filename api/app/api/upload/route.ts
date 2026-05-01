@@ -1,5 +1,9 @@
 import { put } from "@vercel/blob";
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
+const kv = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+});
 import { nanoid } from "nanoid";
 import { validateVaultKey, unauthorizedResponse } from "@/lib/auth";
 import type { VaultFile, UploadResponse } from "@/lib/types";
@@ -41,7 +45,7 @@ export async function POST(request: Request) {
   };
 
   // Store record in KV
-  await kv.hset(`file:${id}`, record);
+  await kv.hset(`file:${id}`, record as Record<string, unknown>);
   await kv.sadd("pending_files", id);
 
   // Increment total upload counter
