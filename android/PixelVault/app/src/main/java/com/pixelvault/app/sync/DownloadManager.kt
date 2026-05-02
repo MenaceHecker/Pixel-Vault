@@ -54,6 +54,9 @@ object DownloadManager {
 
             } catch (e: Exception) {
                 Log.e(TAG, "Exception downloading $filename", e)
+                android.util.Log.e(TAG, "Download dir: ${getDownloadDir(context).absolutePath}")
+                android.util.Log.e(TAG, "Dir exists: ${getDownloadDir(context).exists()}")
+                android.util.Log.e(TAG, "Dir writable: ${getDownloadDir(context).canWrite()}")
                 null
             }
         }

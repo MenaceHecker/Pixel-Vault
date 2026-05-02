@@ -97,7 +97,10 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                 // Download
                 val downloaded = DownloadManager.download(context, file.url, file.filename)
                 if (downloaded == null) {
-                    log("Download FAILED for ${file.filename}")
+                    log("Download FAILED - check if storage permission granted")
+                    log("Dir: ${DownloadManager.getDownloadDir(context).absolutePath}")
+                    log("Exists: ${DownloadManager.getDownloadDir(context).exists()}")
+                    log("Writable: ${DownloadManager.getDownloadDir(context).canWrite()}")
                     Log.e(TAG, "Download failed for ${file.filename}, skipping")
                     return@forEachIndexed
                 }
