@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   };
 
   // Store record in KV
-  await kv.hset(`file:${id}`, record as Record<string, unknown>);
+  await kv.hset(`file:${id}`, record as unknown as Record<string, unknown>);
   await kv.sadd("pending_files", id);
 
   // Increment total upload counter
