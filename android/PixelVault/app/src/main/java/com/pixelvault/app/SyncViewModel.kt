@@ -93,6 +93,7 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                     total = pending.size
                 )
                 log("Downloading ${file.filename}...")
+                log(DownloadManager.debugStorage(context))
 
                 // Download
                 val downloaded = DownloadManager.download(context, file.url, file.filename)
