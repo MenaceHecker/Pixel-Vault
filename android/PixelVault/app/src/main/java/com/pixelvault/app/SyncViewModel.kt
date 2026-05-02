@@ -84,7 +84,7 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                 )
 
                 // Download
-                val downloaded = DownloadManager.download(file.url, file.filename)
+                val downloaded = DownloadManager.download(context, file.url, file.filename)
                 if (downloaded == null) {
                     Log.e(TAG, "Download failed for ${file.filename}, skipping")
                     return@forEachIndexed

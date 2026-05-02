@@ -1,5 +1,6 @@
 package com.pixelvault.app.sync
 
+import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -10,20 +11,19 @@ import java.io.File
 object DownloadManager {
 
     private const val TAG = "DownloadManager"
-    private const val DOWNLOAD_DIR = "/sdcard/PixelVault"
 
     private val client = OkHttpClient()
 
-    fun ensureDownloadDir(): File {
-        val dir = File(DOWNLOAD_DIR)
+    fun getDownloadDir(context: Context): File {
+        val dir = File(context.getExternalFilesDir(null), "PixelVault")
         if (!dir.exists()) dir.mkdirs()
         return dir
     }
 
-    suspend fun download(url: String, filename: String): File? {
+    suspend fun download(context: Context, url: String, filename: String): File? {
         return withContext(Dispatchers.IO) {
             try {
-                val dir = ensureDownloadDir()
+                val dir = getDownloadDir(context)
                 val destFile = File(dir, filename)
 
                 if (destFile.exists()) {
