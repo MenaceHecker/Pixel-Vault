@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.pixelvault.app.data.ApiClient
 import com.pixelvault.app.data.model.ConfirmRequest
 import com.pixelvault.app.sync.DownloadManager
-import com.pixelvault.app.sync.MediaStoreHelper
 import com.pixelvault.app.util.NetworkUtils
 import com.pixelvault.app.util.PrefsManager
 import kotlinx.coroutines.delay
@@ -88,12 +87,6 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                 if (downloaded == null) {
                     Log.e(TAG, "Download failed for ${file.filename}, skipping")
                     return@forEachIndexed
-                }
-
-                // Trigger Google Photos ingestion
-                val scanned = MediaStoreHelper.scanFile(context, downloaded)
-                if (!scanned) {
-                    Log.e(TAG, "MediaStore scan failed for ${file.filename}")
                 }
 
                 // Wait for Google Photos to detect and back up the file
