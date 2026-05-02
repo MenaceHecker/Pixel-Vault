@@ -77,11 +77,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch {
-            viewModel.debugLog.collect { log ->
-                binding.tvDebug.text = log
-            }
-        }
     }
 
     private fun updateUi(state: SyncState) {

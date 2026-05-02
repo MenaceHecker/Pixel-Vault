@@ -17,18 +17,6 @@ object DownloadManager {
     private const val TAG = "DownloadManager"
     private val client = OkHttpClient()
 
-    fun debugStorage(context: Context): String {
-        val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "PixelVault")
-        val sb = StringBuilder()
-        sb.appendLine("Target: ${dir.absolutePath}")
-        sb.appendLine("Parent exists: ${dir.parentFile?.exists()}")
-        sb.appendLine("Parent writable: ${dir.parentFile?.canWrite()}")
-        sb.appendLine("mkdirs result: ${dir.mkdirs()}")
-        sb.appendLine("Dir exists after: ${dir.exists()}")
-        sb.appendLine("Dir writable after: ${dir.canWrite()}")
-        return sb.toString()
-    }
-
     suspend fun download(context: Context, url: String, filename: String): File? {
         return withContext(Dispatchers.IO) {
             try {
