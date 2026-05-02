@@ -68,6 +68,7 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                 return@launch
             }
             log("Wi-Fi OK. Fetching pending...")
+            log(DownloadManager.debugStorage(context))
 
             // 2. Fetch pending files
             _syncState.value = SyncState.Checking
