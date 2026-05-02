@@ -68,7 +68,6 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                 return@launch
             }
             log("Wi-Fi OK. Fetching pending...")
-            log(DownloadManager.debugStorage(context))
 
             // 2. Fetch pending files
             _syncState.value = SyncState.Checking
@@ -94,15 +93,11 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                     total = pending.size
                 )
                 log("Downloading ${file.filename}...")
-                log(DownloadManager.debugStorage(context))
 
                 // Download
                 val downloaded = DownloadManager.download(context, file.url, file.filename)
                 if (downloaded == null) {
                     log("Download FAILED - check if storage permission granted")
-                    log("Dir: ${DownloadManager.getDownloadDir(context).absolutePath}")
-                    log("Exists: ${DownloadManager.getDownloadDir(context).exists()}")
-                    log("Writable: ${DownloadManager.getDownloadDir(context).canWrite()}")
                     Log.e(TAG, "Download failed for ${file.filename}, skipping")
                     return@forEachIndexed
                 }
