@@ -73,18 +73,8 @@ export default async function DashboardPage() {
   const blobPercent = Math.min((blobUsedMB / 500) * 100, 100);
 
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Pixel Vault</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap"
-          rel="stylesheet"
-        />
-        <style>{`
+    <>
+      <style>{`
           *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
           :root {
@@ -285,99 +275,96 @@ export default async function DashboardPage() {
             padding-top: 20px;
           }
         `}</style>
-      </head>
-      <body>
-        <div className="container">
-          <header>
-            <div className="logo">PIXEL<span>_</span>VAULT</div>
-            <div className="tagline">archive relay — v2.0</div>
-          </header>
+      <div className="container">
+        <header>
+          <div className="logo">PIXEL<span>_</span>VAULT</div>
+          <div className="tagline">archive relay — v2.0</div>
+        </header>
 
-          {data.staleFiles > 0 && (
-            <div className="stale-alert">
-              <div className="dot" />
-              {data.staleFiles} file{data.staleFiles > 1 ? "s" : ""} have been pending for over 14 days — sync your Pixel XL soon.
-            </div>
-          )}
+        {data.staleFiles > 0 && (
+          <div className="stale-alert">
+            <div className="dot" />
+            {data.staleFiles} file{data.staleFiles > 1 ? "s" : ""} have been pending for over 14 days — sync your Pixel XL soon.
+          </div>
+        )}
 
-          <div className="grid">
-            <div className="card">
-              <div className="card-label">Pending Files</div>
-              <div className={`card-value ${data.pendingCount > 0 ? "accent" : "ok"}`}>
-                {data.pendingCount}
-              </div>
-              <div className="card-sub">waiting on relay</div>
+        <div className="grid">
+          <div className="card">
+            <div className="card-label">Pending Files</div>
+            <div className={`card-value ${data.pendingCount > 0 ? "accent" : "ok"}`}>
+              {data.pendingCount}
             </div>
-
-            <div className="card">
-              <div className="card-label">Total Archived</div>
-              <div className="card-value">{data.totalArchived}</div>
-              <div className="card-sub">confirmed to Google Photos</div>
-            </div>
-
-            <div className="card">
-              <div className="card-label">Last Sync</div>
-              <div style={{ fontFamily: "var(--mono)", fontSize: "1rem", fontWeight: 700, marginTop: 4 }}>
-                {formatDate(data.lastSync)}
-              </div>
-              <div className="card-sub">most recent confirm call</div>
-            </div>
-
-            <div className="card">
-              <div className="card-label">Stale Files</div>
-              <div className={`card-value ${data.staleFiles > 0 ? "warn" : "ok"}`}>
-                {data.staleFiles}
-              </div>
-              <div className="card-sub">pending &gt; 14 days</div>
-            </div>
-
-            <div className="card card-wide">
-              <div className="card-label">Blob Relay Storage</div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
-                <div className={`card-value ${blobPercent > 80 ? "warn" : ""}`} style={{ fontSize: "1.8rem" }}>
-                  {formatBytes(data.blobUsedBytes)}
-                </div>
-                <div className="card-sub" style={{ marginTop: 0 }}>/ 500 MB free tier</div>
-              </div>
-              <div className="progress-bar">
-                <div
-                  className={`progress-fill ${blobPercent > 80 ? "warn" : ""}`}
-                  style={{ width: `${blobPercent}%` }}
-                />
-              </div>
-            </div>
+            <div className="card-sub">waiting on relay</div>
           </div>
 
           <div className="card">
-            <div className="card-label" style={{ marginBottom: 4 }}>System Status</div>
-            <div className="status-row">
-              <div className="status-dot" />
-              <div className="status-key">relay endpoint</div>
-              <div className="status-val">vercel hobby — active</div>
-            </div>
-            <div className="status-row">
-              <div className="status-dot" />
-              <div className="status-key">blob store</div>
-              <div className="status-val">transient — clears on confirm</div>
-            </div>
-            <div className="status-row">
-              <div className="status-dot" />
-              <div className="status-key">kv store</div>
-              <div className="status-val">active — tracking {data.totalArchived + data.pendingCount} total records</div>
-            </div>
-            <div className="status-row">
-              <div className="status-dot" style={{ background: "var(--text-muted)" }} />
-              <div className="status-key">archive device</div>
-              <div className="status-val">google pixel xl — manual sync</div>
-            </div>
+            <div className="card-label">Total Archived</div>
+            <div className="card-value">{data.totalArchived}</div>
+            <div className="card-sub">confirmed to Google Photos</div>
           </div>
 
-          <footer>
-            <span>github.com/MenaceHecker/pixel-vault</span>
-            <span>rendered {new Date().toUTCString()}</span>
-          </footer>
+          <div className="card">
+            <div className="card-label">Last Sync</div>
+            <div style={{ fontFamily: "var(--mono)", fontSize: "1rem", fontWeight: 700, marginTop: 4 }}>
+              {formatDate(data.lastSync)}
+            </div>
+            <div className="card-sub">most recent confirm call</div>
+          </div>
+
+          <div className="card">
+            <div className="card-label">Stale Files</div>
+            <div className={`card-value ${data.staleFiles > 0 ? "warn" : "ok"}`}>
+              {data.staleFiles}
+            </div>
+            <div className="card-sub">pending &gt; 14 days</div>
+          </div>
+
+          <div className="card card-wide">
+            <div className="card-label">Blob Relay Storage</div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+              <div className={`card-value ${blobPercent > 80 ? "warn" : ""}`} style={{ fontSize: "1.8rem" }}>
+                {formatBytes(data.blobUsedBytes)}
+              </div>
+              <div className="card-sub" style={{ marginTop: 0 }}>/ 500 MB free tier</div>
+            </div>
+            <div className="progress-bar">
+              <div
+                className={`progress-fill ${blobPercent > 80 ? "warn" : ""}`}
+                style={{ width: `${blobPercent}%` }}
+              />
+            </div>
+          </div>
         </div>
-      </body>
-    </html>
+
+        <div className="card">
+          <div className="card-label" style={{ marginBottom: 4 }}>System Status</div>
+          <div className="status-row">
+            <div className="status-dot" />
+            <div className="status-key">relay endpoint</div>
+            <div className="status-val">vercel hobby — active</div>
+          </div>
+          <div className="status-row">
+            <div className="status-dot" />
+            <div className="status-key">blob store</div>
+            <div className="status-val">transient — clears on confirm</div>
+          </div>
+          <div className="status-row">
+            <div className="status-dot" />
+            <div className="status-key">kv store</div>
+            <div className="status-val">active — tracking {data.totalArchived + data.pendingCount} total records</div>
+          </div>
+          <div className="status-row">
+            <div className="status-dot" style={{ background: "var(--text-muted)" }} />
+            <div className="status-key">archive device</div>
+            <div className="status-val">google pixel xl — manual sync</div>
+          </div>
+        </div>
+
+        <footer>
+          <span>github.com/MenaceHecker/pixel-vault</span>
+          <span>rendered {new Date().toUTCString()}</span>
+        </footer>
+      </div>
+    </>
   );
 }
