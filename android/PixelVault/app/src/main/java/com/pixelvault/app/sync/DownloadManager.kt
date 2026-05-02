@@ -16,12 +16,32 @@ object DownloadManager {
     private val client = OkHttpClient()
 
     fun getDownloadDir(context: Context): File {
-        val dir = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-            "PixelVault"
+        // Try multiple locations in order of preference
+        val candidates = listOf(
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "PixelVault"),
+            File(Environment.getExternalStorageDirectory(), "Pictures/PixelVault"),
+            File(Environment.getExternalStorageDirectory(), "PixelVault"),
+            context.getExternalFilesDir("PixelVault")!!
         )
-        if (!dir.exists()) dir.mkdirs()
-        return dir
+
+        for (dir in candidates) {
+            try {
+                if (dir.exists() || dir.mkdirs()) {
+                    if (dir.canWrite()) {
+                        Log.d(TAG, "Using download dir: ${dir.absolutePath}")
+                        return dir
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to use dir: ${dir.absolutePath}", e)
+            }
+        }
+
+        // Last resort — internal files dir, always writable
+        val fallback = File(context.filesDir, "PixelVault")
+        fallback.mkdirs()
+        Log.w(TAG, "Falling back to internal dir: ${fallback.absolutePath}")
+        return fallback
     }
 
     suspend fun download(context: Context, url: String, filename: String): File? {
