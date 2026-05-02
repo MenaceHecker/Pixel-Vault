@@ -97,9 +97,11 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                 // Download
                 val downloaded = DownloadManager.download(context, file.url, file.filename)
                 if (downloaded == null) {
+                    log("Download FAILED for ${file.filename}")
                     Log.e(TAG, "Download failed for ${file.filename}, skipping")
                     return@forEachIndexed
                 }
+                log("Download OK: ${downloaded.absolutePath}")
                 log("Download OK. Scanning...")
 
                 // Trigger Google Photos ingestion
