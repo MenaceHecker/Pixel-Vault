@@ -41,6 +41,13 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
     private val _totalSynced = MutableStateFlow(0)
     val totalSynced: StateFlow<Int> = _totalSynced
 
+    private val _debugLog = MutableStateFlow("")
+    val debugLog: StateFlow<String> = _debugLog
+
+    private fun log(msg: String) {
+        _debugLog.value = "${_debugLog.value}\n$msg".takeLast(500)
+    }
+
     init {
         val context = getApplication<Application>()
         _lastSync.value = PrefsManager.getLastSync(context)
@@ -55,10 +62,12 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
 
             // 1. Wi-Fi gate
             _syncState.value = SyncState.CheckingWifi
+            log("Checking Wi-Fi...")
             if (!NetworkUtils.isWifiConnected(context)) {
                 _syncState.value = SyncState.Error("Connect to Wi-Fi before syncing")
                 return@launch
             }
+            log("Wi-Fi OK. Fetching pending...")
 
             // 2. Fetch pending files
             _syncState.value = SyncState.Checking
@@ -69,6 +78,7 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                 _syncState.value = SyncState.Error("Could not reach API: ${e.message}")
                 return@launch
             }
+            log("Found ${pending.size} file(s)")
 
             if (pending.isEmpty()) {
                 _syncState.value = SyncState.UpToDate
@@ -82,6 +92,7 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                     current = index + 1,
                     total = pending.size
                 )
+                log("Downloading ${file.filename}...")
 
                 // Download
                 val downloaded = DownloadManager.download(context, file.url, file.filename)
@@ -89,15 +100,18 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
                     Log.e(TAG, "Download failed for ${file.filename}, skipping")
                     return@forEachIndexed
                 }
+                log("Download OK. Scanning...")
 
                 // Trigger Google Photos ingestion
                 val scanned = MediaStoreHelper.scanFile(context, downloaded)
                 if (!scanned) {
                     Log.e(TAG, "MediaStore scan failed for ${file.filename}")
                 }
+                log("Waiting 30s for Google Photos...")
 
                 // Wait for Google Photos to detect and back up the file
                 delay(GOOGLE_PHOTOS_BUFFER_MS)
+                log("Confirming ${file.id}...")
 
                 // Confirm with API — deletes blob
                 try {

@@ -79,6 +79,12 @@ class MainActivity : AppCompatActivity() {
                 binding.tvTotalSynced.text = "Total archived: $total"
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.debugLog.collect { log ->
+                binding.tvDebug.text = log
+            }
+        }
     }
 
     private fun updateUi(state: SyncState) {
