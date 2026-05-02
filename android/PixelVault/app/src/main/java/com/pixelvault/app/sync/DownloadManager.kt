@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
+import android.os.Environment
 
 object DownloadManager {
 
@@ -15,7 +16,10 @@ object DownloadManager {
     private val client = OkHttpClient()
 
     fun getDownloadDir(context: Context): File {
-        val dir = File(context.getExternalFilesDir(null), "PixelVault")
+        val dir = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+            "PixelVault"
+        )
         if (!dir.exists()) dir.mkdirs()
         return dir
     }
