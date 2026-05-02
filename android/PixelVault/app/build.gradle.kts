@@ -17,10 +17,14 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "BASE_URL",
-            "\"${project.findProperty("VAULT_BASE_URL") ?: "https://pixel-vault-api.vercel.app"}\"")
-        buildConfigField("String", "VAULT_SECRET_KEY",
-            "\"${project.findProperty("VAULT_SECRET_KEY") ?: ""}\"")
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+
+        val vaultBaseUrl = project.findProperty("VAULT_BASE_URL") as String? ?: "https://pixel-vault-two.vercel.app"
+        val vaultSecretKey = project.findProperty("VAULT_SECRET_KEY") as String? ?: ""
+        buildConfigField("String", "BASE_URL", "\"$vaultBaseUrl\"")
+        buildConfigField("String", "VAULT_SECRET_KEY", "\"$vaultSecretKey\"")
     }
 
     buildTypes {
