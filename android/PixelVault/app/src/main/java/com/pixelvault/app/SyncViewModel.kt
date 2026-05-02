@@ -29,7 +29,7 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
 
     companion object {
         private const val TAG = "SyncViewModel"
-        private const val GOOGLE_PHOTOS_BUFFER_MS = 90_000L 
+        private const val GOOGLE_PHOTOS_BUFFER_MS = 30_000L //reduced buffer time so it reflects quickly
     }
 
     private val _syncState = MutableStateFlow<SyncState>(SyncState.Idle)
