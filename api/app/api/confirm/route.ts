@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   const archivedAt = new Date().toISOString();
 
   await kv.hset(`file:${id}`, {
-    status: "done",
+    status: "archived",
     archivedAt,
     confirmedAt: archivedAt,
     blobUrl: "",
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
   await kv.set("stats:last_sync", archivedAt);
   await kv.incr("stats:total_archived");
 
-  const response: ConfirmResponse = { id, status: "done" };
+  const response: ConfirmResponse = { id, status: "archived" };
 
   return Response.json(response);
 }

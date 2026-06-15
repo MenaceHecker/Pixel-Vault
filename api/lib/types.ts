@@ -3,7 +3,7 @@ export interface VaultFile {
   filename: string;
   takenAt: string;
   uploadedAt: string;
-  status: "pending" | "done";
+  status: "pending" | "archived";
   blobUrl: string;
   size: number;
 }
@@ -23,7 +23,7 @@ export interface UploadResponse {
 
 export interface ConfirmResponse {
   id: string;
-  status: "done";
+  status: "archived";
 }
 
 export interface PendingResponse {

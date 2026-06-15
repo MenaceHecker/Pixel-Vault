@@ -82,7 +82,7 @@ Note your production URL, e.g. `https://pixel-vault-api.vercel.app`
 
 **Body:** `{ id: string }`
 
-**Response:** `{ id: string, status: "done" }`
+**Response:** `{ id: string, status: "archived" }`
 
 ## Testing with curl
 
