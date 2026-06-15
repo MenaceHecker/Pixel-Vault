@@ -8,41 +8,51 @@ export const runtime = "edge";
 export async function POST(request: Request) {
   if (!validateVaultKey(request)) return unauthorizedResponse();
 
-  const body = await request.json();
-  const { id } = body as { id: string };
+  let body: unknown;
 
-  if (!id) {
-    return new Response(JSON.stringify({ error: "Missing id" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const record = await kv.hgetall(`file:${id}`) as VaultFile | null;
+  if (
+    typeof body !== "object" ||
+    body === null ||
+    !("id" in body) ||
+    typeof body.id !== "string" ||
+    body.id.trim() === ""
+  ) {
+    return Response.json({ error: "Missing id" }, { status: 400 });
+  }
+
+  const id = body.id;
+  const record = (await kv.hgetall(`file:${id}`)) as VaultFile | null;
 
   if (!record) {
-    return new Response(JSON.stringify({ error: "File not found" }), {
-      status: 404,
-      headers: { "Content-Type": "application/json" },
-    });
+    return Response.json({ error: "File not found" }, { status: 404 });
   }
 
-  // Delete from Vercel Blob
-  await del(record.blobUrl);
+  if (record.blobUrl) {
+    await del(record.blobUrl);
+  }
 
-  // Update KV record status
-  await kv.hset(`file:${id}`, { status: "done", confirmedAt: new Date().toISOString() });
+  const archivedAt = new Date().toISOString();
 
-  // Remove from pending set
+  await kv.hset(`file:${id}`, {
+    status: "done",
+    archivedAt,
+    confirmedAt: archivedAt,
+    blobUrl: "",
+  });
+
   await kv.srem("pending_files", id);
+  await kv.sadd("archived_files", id);
 
-  // Update stats
-  await kv.set("stats:last_sync", new Date().toISOString());
+  await kv.set("stats:last_sync", archivedAt);
   await kv.incr("stats:total_archived");
 
   const response: ConfirmResponse = { id, status: "done" };
-  return new Response(JSON.stringify(response), {
-    status: 200,
-    headers: { "Content-Type": "application/json" },
-  });
+
+  return Response.json(response);
 }
