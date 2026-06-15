@@ -65,6 +65,7 @@ Note your production URL, e.g. `https://pixel-vault-api.vercel.app`
 | `file` | File | Photo or video binary |
 | `filename` | string | Original filename |
 | `takenAt` | string | ISO 8601 date taken |
+| `assetLocalIdentifier` | string | Optional iOS Photos local identifier |
 
 **Response:** `{ id: string, status: "pending" }`
 
@@ -83,6 +84,13 @@ Note your production URL, e.g. `https://pixel-vault-api.vercel.app`
 **Body:** `{ id: string }`
 
 **Response:** `{ id: string, status: "archived" }`
+
+---
+
+### GET /api/archived
+**Headers:** `X-Vault-Key: <secret>`
+
+**Response:** `[{ id, assetLocalIdentifier, filename, archivedAt }]`
 
 ## Testing with curl
 

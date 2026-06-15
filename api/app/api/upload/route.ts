@@ -13,6 +13,7 @@ export async function POST(request: Request) {
   const file = formData.get("file") as File | null;
   const filename = formData.get("filename") as string | null;
   const takenAt = formData.get("takenAt") as string | null;
+  const assetLocalIdentifier = formData.get("assetLocalIdentifier");
 
   if (!file || !filename) {
     return new Response(JSON.stringify({ error: "Missing file or filename" }), {
@@ -38,6 +39,10 @@ export async function POST(request: Request) {
     status: "pending",
     blobUrl: blob.url,
     size: file.size,
+    ...(typeof assetLocalIdentifier === "string" &&
+    assetLocalIdentifier.trim() !== ""
+      ? { assetLocalIdentifier }
+      : {}),
   };
 
   // Store record in KV

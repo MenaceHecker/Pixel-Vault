@@ -6,6 +6,9 @@ export interface VaultFile {
   status: "pending" | "archived";
   blobUrl: string;
   size: number;
+  assetLocalIdentifier?: string;
+  archivedAt?: string;
+  confirmedAt?: string;
 }
 
 export interface PendingFile {
@@ -28,4 +31,11 @@ export interface ConfirmResponse {
 
 export interface PendingResponse {
   files: PendingFile[];
+}
+
+export interface ArchivedFile {
+  id: string;
+  assetLocalIdentifier: string;
+  filename: string;
+  archivedAt: string;
 }

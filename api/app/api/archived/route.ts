@@ -1,6 +1,6 @@
 import { kv } from "@/lib/kv";
 import { validateVaultKey, unauthorizedResponse } from "@/lib/auth";
-import type { VaultFile } from "@/lib/types";
+import type { ArchivedFile, VaultFile } from "@/lib/types";
 
 export const runtime = "edge";
 
@@ -16,16 +16,27 @@ export async function GET(request: Request) {
     })
   );
 
-  const archived = files
-    .filter((file): file is VaultFile => Boolean(file))
-    .filter((file) => file.status === "archived")
+  const archived: ArchivedFile[] = files
+    .filter(
+      (
+        file
+      ): file is VaultFile & {
+        status: "archived";
+        assetLocalIdentifier: string;
+        archivedAt: string;
+      } =>
+        file?.status === "archived" &&
+        typeof file.assetLocalIdentifier === "string" &&
+        file.assetLocalIdentifier !== "" &&
+        typeof file.archivedAt === "string" &&
+        file.archivedAt !== ""
+    )
     .map((file) => ({
       id: file.id,
       assetLocalIdentifier: file.assetLocalIdentifier,
       filename: file.filename,
       archivedAt: file.archivedAt,
-    }))
-    .filter((file) => Boolean(file.assetLocalIdentifier));
+    }));
 
   return Response.json(archived);
 }
