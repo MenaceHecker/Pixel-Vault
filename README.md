@@ -2,7 +2,7 @@
 
 The Google Pixel XL (1st generation, 2016) came with a lifetime guarantee of unlimited original-quality Google Photos storage. Google stopped offering this to newer devices, and iCloud storage costs money. Rather than pay or switch ecosystems, I built a small pipeline that keeps my iPhone as my primary camera while the Pixel XL handles archival in the background.
 
-Total ongoing cost: $0.
+Total potential cost: $0.
 
 ---
 
