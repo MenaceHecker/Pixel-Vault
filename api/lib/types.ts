@@ -39,3 +39,22 @@ export interface ArchivedFile {
   filename: string;
   archivedAt: string;
 }
+
+export interface VaultFile {
+  id: string;
+  filename: string;
+  assetLocalIdentifier?: string;
+  mediaType?: string;
+
+  checksum: string;
+
+  takenAt: string;
+  uploadedAt: string;
+  archivedAt?: string | null;
+  deletedFromIphoneAt?: string | null;
+
+  status: VaultFileStatus;
+
+  blobUrl: string;
+  size: number;
+}
